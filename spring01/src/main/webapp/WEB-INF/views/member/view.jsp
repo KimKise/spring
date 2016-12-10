@@ -6,6 +6,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <%@ include file="../include/header.jsp" %>
+<script type="text/javascript">
+$(document).ready(function(){
+	//수정 버튼 클릭
+	$("#btnUpdate").click(function(){
+		document.form1.action="${path}/member/update.do";
+		document.form1.submit();
+	});
+	//삭제 버튼 클릭
+	$("#btnDelete").click(function(){
+		if(confirm("삭제하시겠습니까?")){
+			document.form1.action="${path}/member/delete.do";
+			document.form1.submit();
+		}
+	})
+});
+</script>
 </head>
 <body>
 <%@ include file="../include/menu.jsp" %>
@@ -15,7 +31,7 @@
 	<table border="1">
 		<tr>
 			<td>아이디</td>
-			<td><input name="userid" value="${dto.userid}"></td>
+			<td><input name="userid" value="${dto.userid}" readonly></td>
 		</tr>
 		<tr>
 			<td>비밀번호</td>

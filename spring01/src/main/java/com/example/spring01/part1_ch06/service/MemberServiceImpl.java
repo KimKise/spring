@@ -39,13 +39,13 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void deleteMember(String userid) {
-		// TODO Auto-generated method stub
+		memberDao.deleteMember(userid);
 
 	}
 
 	@Override
 	public void updateMember(MemberVO vo) {
-		// TODO Auto-generated method stub
+		memberDao.updateMember(vo);
 
 	}
 

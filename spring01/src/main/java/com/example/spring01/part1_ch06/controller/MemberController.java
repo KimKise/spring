@@ -66,4 +66,20 @@ public class MemberController {
 		model.addAttribute("dto",memberService.viewMember(userid));
 		return "member/view";
 	}
+	
+	@RequestMapping("member/update.do")
+	public String update(@ModelAttribute MemberVO vo){
+		memberService.updateMember(vo);
+		return "redirect:/member/list.do";
+	}
+	
+	@RequestMapping("member/delete.do")
+	//String userid 앞에 @RequestParam이 생략
+	//@RequestParam: get or post 방식으로 전달된 변수 값
+	public String delete(String userid){
+		//삭제 처리
+		memberService.deleteMember(userid);
+		//회원 목록이로 이동
+		return "redirect:/member/list.do";
+	}
 }

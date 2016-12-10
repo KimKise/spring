@@ -18,6 +18,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="memberView" resultType="com.example.spring01.part1_ch06.model.dto.MemberVO">
 	select * from tbl_member where userid = #{userid}
 	</select>
+	
+	<update id="memberUpdate">
+	update tbl_member
+	set userpw=#{userpw}, username=#{username}, email=#{email}, updatedate=sysdate
+	where userid=#{userid}
+	</update>
+	
+	<delete id="memberDelete">
+	delete from tbl_member
+	where userid=#{userid}
+	</delete>
 </mapper>
 
 

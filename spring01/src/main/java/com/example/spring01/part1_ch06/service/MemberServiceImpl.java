@@ -49,4 +49,10 @@ public class MemberServiceImpl implements MemberService {
 
 	}
 
+	@Override
+	public boolean checkPw(String userid, String userpw) {
+		// TODO Auto-generated method stub
+		return memberDao.checkPw(userid, userpw);
+	}
+
 }

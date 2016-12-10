@@ -68,18 +68,41 @@ public class MemberController {
 	}
 	
 	@RequestMapping("member/update.do")
-	public String update(@ModelAttribute MemberVO vo){
-		memberService.updateMember(vo);
-		return "redirect:/member/list.do";
+	public String update(@ModelAttribute MemberVO vo, Model model){
+		//비밀번호 체크
+		boolean result=memberService.checkPw(vo.getUserid(), vo.getUserpw());
+		if(result){
+			memberService.updateMember(vo);
+			return "redirect:/member/list.do";
+		}else{
+			//가입일자, 수정날짜
+			MemberVO vo2=memberService.viewMember(vo.getUserid());
+			vo.setRegdate(vo2.getRegdate());
+			vo.setUpdatedate(vo2.getUpdatedate());
+			
+			model.addAttribute("dto", vo);
+			model.addAttribute("message","비밀번호가 일치하지 않습니다.");
+			return "member/view";
+		}
 	}
 	
 	@RequestMapping("member/delete.do")
 	//String userid 앞에 @RequestParam이 생략
 	//@RequestParam: get or post 방식으로 전달된 변수 값
-	public String delete(String userid){
-		//삭제 처리
-		memberService.deleteMember(userid);
-		//회원 목록이로 이동
-		return "redirect:/member/list.do";
+	public String delete(String userid, String userpw, Model model){
+		//비밀번호 체크
+				boolean result=memberService.checkPw(userid, userpw);
+				if(result){
+					//삭제 처리
+					memberService.deleteMember(userid);
+					//회원 목록이로 이동
+					return "redirect:/member/list.do";
+				}else{
+					//비번이 틀렸을 때
+					model.addAttribute("message","비밀번호가 일치하지 않습니다.");
+					model.addAttribute("dto",memberService.viewMember(userid));//테이블에서 원래값 꺼내기
+					return "member/view";//model을 쓸때는 redirect를 쓰면 안됨 바로 jsp로 가야함
+				}
+		
 	}
 }

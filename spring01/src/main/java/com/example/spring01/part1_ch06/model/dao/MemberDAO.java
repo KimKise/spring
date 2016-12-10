@@ -10,4 +10,5 @@ public interface MemberDAO {//인터페이스로 method만 선언해둠
 	public MemberVO viewMember(String userid);
 	public void deleteMember(String userid);
 	public void updateMember(MemberVO vo);
+	public boolean checkPw(String userid, String userpw);
 }

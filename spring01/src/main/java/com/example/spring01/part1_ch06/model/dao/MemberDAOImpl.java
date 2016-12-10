@@ -1,6 +1,8 @@
 package com.example.spring01.part1_ch06.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -46,6 +48,18 @@ public class MemberDAOImpl implements MemberDAO {
 	public void updateMember(MemberVO vo) {
 		sqlSession.update("member.memberUpdate",vo);
 
+	}
+
+	@Override
+	public boolean checkPw(String userid, String userpw) {
+		boolean result=false;
+		//mybatis에 전달되는 값은 하나 뿐이 안되기 때문에 두개 이상일 때는 map을 사용하거나 dto를 사용한다.
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("userpw", userpw);
+		int count = sqlSession.selectOne("member.checkPw", map);
+		if(count==1) result=true;
+		return result;
 	}
 
 }

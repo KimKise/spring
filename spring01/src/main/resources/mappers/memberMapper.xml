@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="member">
+
+	<select id="memberList" resultType="com.example.spring01.part1_ch06.model.dto.MemberVO">
+	select * from tbl_member order by username	
+	</select>
+	
+	<insert id="memberInsert">
+	insert into tbl_member (userid, userpw, username, email)
+	values (#{userid},#{userpw},#{username},#{email})
+	</insert>
+	
+	<select id="memberView" resultType="com.example.spring01.part1_ch06.model.dto.MemberVO">
+	select * from tbl_member where userid = #{userid}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

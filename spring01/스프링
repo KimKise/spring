@@ -1,0 +1,70 @@
+* 스프링의 주요 특징
+-. POJO(Plan Old Java Object)기반의 구성 : 별도의 API가 필요하지 않은 일반적인 자바 코드를 이용하여 개발 가능
+-. 의존성 주입(DI)을 통한 객체 간의 관계 구성
+-. AOP(Aspect Oriented Programming) 지원 : 반복적인 코드를 줄이고 개발자가 비즈니스 로직에만 집중할 수 있도록 지원함
+-. 편리한 MVC 구조
+-. WAS에 종속적이지 않는 개발 환경
+
+*IoC(Inversion of Control, 제어의 역전) - 객체에 대한 제어권
+-. 기존에는 개발자에게 제어권이 있었음(new 연산자)
+-. 객체의 제어권을 스프링에게 넘김
+-. 인스턴스의 라이프 사이클(생성부터 소멸까지)을 개발자가 아닌 스프링 컨테이너가 담당
+
+*DI(Dependency Injection, 의존관계주입)
+-. 객체 간의 의존성을 개발자가 성정하는 것이 하닌 스프링 컨테이너가 주입시켜 주는 기능
+-. 객체를 쉽게 확장하고 재사용할 수 있음
+
+*인터페이스(interface)의 장점
+: 인터페이스를 활용하면 유연한 개발이 가능해진다.
+-. A는 B의 method만 호출하면 된다.
+-. A는 C의 존재와 내용을 몰라도 B를 통해 기능을 사용할 수 있다.
+-. C의 변경이 A에 영향을 미치지 않는다(느슨한 결합이 가능해짐)
+-. C의 핵심적인 기능을 자유롭게 변경할 수 있게 된다.
+A(Class) -> B(Interface) -> C(Interface를 구현한 클래스) 
+
+*구동 과정
+1. web.xml(웹프로젝트의 배치 기술서 deploy descriptor/웹프로젝트의 환경 설정 파일)
+2. /WEB-INF/spring/root-context.xml(스프링의 환경설정 파일)
+3. DispatcherServlet(스프링의 내장된 컨트롤러)으로 이동 
+	/WEB-INF/spring/appServlet/servlet-context.xml 참조
+4.servlet-context.xml
+	어노테이션을 사용가능하도록 설정
+	component-scan에서 컴포넌트(bean) 자동 검색해서 객체 생성
+	Controller 로딩
+	
+*root-context.xml에서 bean
+형식 : <bean id="참조 변수"  class="클래스 이름"></beean>
+예문 : <bean id="homeController"  class="com.example.spring01.HomeController"></beean>
+	=> HomeController homeController = new HomeController()
+DriverManagerDataSource : DB연동 클래스
+SqlSessionFactoryBean : SqlSessionTemplate 객체 생성
+SqlSessionTemplate : SqlSession 객체 생성
+
+*메이븐 에러 발생시 해결 방법
+1. 프로젝트 오른쪽 properties에서 java build path에서 jdk 버전을 1.8로 조정
+2. project facets에서 jdk 버전을 1.8로 조정
+3. pom.xml에서 spring version 조정
+4. 메이븐 재 인스톨
+
+*로그를 수집할 클래스에 변수 선언
+-. private static final Logger logger = LoggerFactory.getLogger(클래스이름.class);
+	private : 외부에서 로그를 가로채지 못하도록 하기 위해서
+	static final : 로그 내용이 바뀌지 않으므로
+-. 로그를 수집할 method에서 로그 수집 명령어 호출
+	logger.info("로그 타이틀", 출력할 값); //syso대신 
+-. 로그의 level
+	Debug	: Debug, Info, Warn, Error 포함
+	Info	: Info, Warn, Error 포함
+	Warn	: Warn, Error 포함
+	Error	: Error만 포함
+	
+*Java Decompiler : class 확장자 바이너리 파일을 볼 수 있다 //컴파일된 파일은 target폴더에 있다.
+
+* bean을 자동으로 검색해서 등록
+<context:component-scan base-package="com.example.spring01" />
+@Controoler : 컨트롤러 빈
+@Repository : dao(데이터베이스 관련 작업) bean
+@Service	: 서비스(비즈니스로직) bean
+@Inject		: 의존관계 주입(객체를 외부에서 만들어서 연결시켜주는 역할)
+//스프링이 관리하는 클래스(이미지에 S가 붙은)는 new객체를 생성하면 안된다.
+	

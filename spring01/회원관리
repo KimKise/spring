@@ -1,1 +1,48 @@
-*스프링 빈의 종류
+* 회원 리스트 구동 순서
+1. Controller에 요청 들어옴
+2. Controller는 Service를 호출		//memberService.memberList();
+3. Service는 DAO를 호출한 뒤 리턴 		//return memberDao.memberList(); 
+4. DAO에서 myBatis 접근			//return sqlSession.selectList("member.memberList");
+5. 결국 DB에 접근 한 결과값을 Controller에 List<MemberVO> list = memberService.memberList(); 형태로 담아진다.
+6. model.addAttribute("list",list); list를 model에 담아서 포워딩 할 jsp 페이지에 넘겨 준다.
+7. jsp에서 <c:forEach var="row" items="${list}"> 형대로 넘어온 list값을 반복문으로 출력
+
+ * 회원 Detail 구동 순서
+1. <a href="${path}/member/view.do?userid=${row.userid}">${row.username}</a>	//list.jsp에서 view 컨트롤러에 파라미터를 보냄
+2. 컨트롤러에 넘어온 파라미터를 받는다. --view(String userid, Model model)--
+3. model.addAttribute("dto",memberService.viewMember(userid));	//model에 한 회원에 대한 리스트를 불러옴
+	3.1. 여기서 memberService.viewMember(userid) 
+	3.2. Service(Inter) -> ServiceImpl(Class) -> DAO(Inter) -> DAOImple(Class)
+	3.3 DAOImpl에서 --return sqlSession.selectOne("member.memberView",userid);-- MyBatis접근
+4. view.jsp에서 받아온 model값 dto를 받아옴, 하나의 회원에 대한 정보를 받아오는 것이기 때문에 반복문을 쓸 필요가 없다.
+
+* 회원 등록 구동 순서
+1. list.jsp페이지에서 '회원등록' 버튼을 누르면 write.do 컨트롤러로 간다.
+2. write.jsp 페이지를 불러옴 
+3. write.jsp 페이지에는 form태그(method=post)로 등록할 회원 정보를 채운다.
+4. jsp 페이지로 부터 넘어온 값을 --insert(@ModelAttribute MemberVO vo)-- 형태로 Controller에 받아옴.
+5. 받아온 정보를 DB에 넘겨준다.  memberService.insertMember(vo);
+	5.1. Service -> DAO -> MyBatis접근
+	
+* 회원 수정 구동 순서
+1. view.jsp페이지에서 '수정' 버튼을 누르면 update.do 컨트롤러로 간다.
+2. --update(@ModelAttribute MemberVO vo, Model model)-- view에서 보내준 값을 받기 위해 MemberVO vo //값을 담기 위한 Model model
+3. 비번 첵크 boolean result=memberService.checkPw(vo.getUserid(), vo.getUserpw());
+	3.1. 받아오 vo의 id와 pw 값을 파라미터로 보냄
+	3.2. 쭉쭉 받다 DAOImle 클래스에 오면 MyBatis에 접근
+	3.3. int count = sqlSession.selectOne("member.checkPw", map); 
+		-> 먼저 받아온 id와 pw는 map에 저장해서 MyBatis에 한번에 보낸다. 두 개를 동시에 보낼 수 없기 때문에
+		-> checkPw의 sql구문은 select count(*) from tab where 조건 이기 때문에 개수(int)를 리턴
+		-> if(count==1) result=true; 결국 조건(아이디의 비번)이 맞으면 true를 return한다.
+4. 비번책크가 true면 memberService.updateMember(vo); 받아온 vo값을 update하고 
+	redirect:/member/list.do 리스트 컨트롤러로 가서 리스트를 다시 뿌려 준다.
+5. 비번책크가 false이면 
+	5.1. model.addAttribute("dto", vo); 받아온 값을 그대로 model에 저장하고 다시 원래 페이지로 돌아가 뿌려줌
+	5.2. model.addAttribute("message","비밀번호가 일치하지 않습니다."); 비밀번호가 틀렸다는 view 페이지에 message를 띄우기 위해
+
+* 회원 삭제
+1. view.jsp페이지에서 '삭제' 버튼을 누르면 delete.do 컨트롤러로 간다.
+2. 비번 첵크하고 삭제		//회원 수정 구동순서와 비슷 
+
+
+	

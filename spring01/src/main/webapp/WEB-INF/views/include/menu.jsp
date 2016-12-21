@@ -6,6 +6,7 @@
 
 <div style="text-align: center;">
 	<a href="${path}/member/list.do">회원관리</a>
+	<a href="${path}/board/board_list.do">게시판</a>
 </div>
 
 
